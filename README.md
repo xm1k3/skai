@@ -6,7 +6,7 @@
 
 <p align="center">
   <a href="https://golang.org"><img src="https://img.shields.io/badge/made%20with-Go-00ADD8.svg"></a>
-  <a href="https://github.com/xm1k3/skai/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg"></a>
+  <a href="https://github.com/xm1k3/skai/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-Apache%202.0-green.svg"></a>
   <a href="https://github.com/xm1k3/skai/releases"><img src="https://img.shields.io/github/v/release/xm1k3/skai"></a>
 </p>
 
@@ -123,4 +123,4 @@ For each enabled source `skai` clones (or pulls) the repository under `~/.skai/s
 
 ## License
 
-Distributed under the MIT License. See [LICENSE](LICENSE).
+Distributed under the Apache License 2.0. See [LICENSE](LICENSE).
