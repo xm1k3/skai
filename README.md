@@ -1,2 +1,126 @@
-# skai
-SKill kit for AI 
+<h1 align="center">skai</h1>
+
+<p align="center">
+  Community-driven aggregator and installer for Agent Skills.
+</p>
+
+<p align="center">
+  <a href="https://golang.org"><img src="https://img.shields.io/badge/made%20with-Go-00ADD8.svg"></a>
+  <a href="https://github.com/xm1k3/skai/blob/main/LICENSE"><img src="https://img.shields.io/badge/license-MIT-green.svg"></a>
+  <a href="https://github.com/xm1k3/skai/releases"><img src="https://img.shields.io/github/v/release/xm1k3/skai"></a>
+</p>
+
+---
+
+`skai` (SKill kit for AI) collects [Agent Skills](https://docs.claude.com/en/docs/agents-and-tools/agent-skills) scattered across dozens of community repositories into a single searchable catalog, runs static risk analysis on every skill, and installs them into Claude Code, Codex CLI or claude.ai with one command.
+
+## Features
+
+- Aggregates skills from any number of git repositories defined in a simple `sources.yaml`
+- Builds a flat JSON index (`~/.skai/index.json`) with per-skill metadata and risk flags
+- **Static analysis only** — scripts are never executed during `sync`, `validate` or `list`
+- Risk-aware install with an explicit summary (network calls, destructive ops) before copying
+- Installs to Claude Code, Codex CLI (copy or symlink) or exports a zip for claude.ai
+- Fuzzy search, category / risk / tool filters, content-hash deduplication and catalog stats
+- `export-awesome-list` regenerates an awesome-list markdown from the whole catalog
+
+## Installation
+
+```bash
+go install github.com/xm1k3/skai@latest
+```
+
+Or grab a static binary from the [releases](https://github.com/xm1k3/skai/releases) page.
+
+Requires the `git` binary in `PATH`.
+
+## Quick start
+
+```bash
+skai init          # write ~/.skai/sources.yaml with the default sources
+skai sync          # clone/pull every enabled source and build the index
+skai search pdf    # find a skill
+skai info pdf      # inspect its metadata and risk flags
+skai install pdf --target claude-code --project
+```
+
+## Commands
+
+| Command                    | Description                                                    |
+|----------------------------|----------------------------------------------------------------|
+| `skai init`                | Create `~/.skai/sources.yaml` with the default sources         |
+| `skai sync`                | Clone or pull every enabled source and rebuild the index       |
+| `skai list`                | List indexed skills with filters                               |
+| `skai search <query>`      | Fuzzy search over name and description                         |
+| `skai validate [skill]`    | Validate frontmatter, referenced paths and length              |
+| `skai info <skill>`        | Show full metadata, risk flags, source and last commit         |
+| `skai install <skill>`     | Install into a target with a risk summary and confirmation     |
+| `skai uninstall <skill>`   | Remove an installed skill                                      |
+| `skai dedupe`              | Remove duplicate skills from the index by content hash         |
+| `skai stats`               | Show counts by category, source and risk                       |
+| `skai export-awesome-list` | Generate an `awesome-list.md` from the catalog                 |
+
+### list filters
+
+```bash
+skai list --category security --risk high
+skai list --tool codex           # hides Claude Code only skills
+skai list --has-scripts --network
+skai list --destructive
+```
+
+## Install targets
+
+| Target        | Personal                    | Project                                        |
+|---------------|-----------------------------|------------------------------------------------|
+| `claude-code` | `~/.claude/skills/<name>/`  | `.claude/skills/<name>/`                       |
+| `codex`       | `~/.codex/skills/<name>/`   | `.codex/skills/<name>/`                         |
+| `web`         | n/a                         | `./skai-exports/<name>.zip` for manual upload  |
+
+```bash
+skai install pdf --target claude-code --personal
+skai install pdf --target codex --project --link   # symlink, future syncs propagate
+skai install pdf --target web                       # zip for claude.ai upload
+```
+
+- `--personal` (default) installs into the user directory, `--project` into the current repo
+- `--link` symlinks instead of copying so future `skai sync` updates propagate automatically
+- A name conflict with a skill already installed from a different source warns and requires `--force`
+- `--yes` skips the confirmation prompt (the risk summary is still printed)
+
+## Risk analysis
+
+For every skill `skai` records, from static analysis only:
+
+- `has_scripts` — ships a `scripts/` directory or executable code blocks in the body
+- `network_calls` — references `curl`, `wget`, `fetch(` or an `http(s)://` URL
+- `destructive_ops` — references `rm`, `mv`, `DROP TABLE`, `delete`
+- `confirms_before_destructive` — pairs a destructive op with a confirmation pattern
+- `claude_code_only` — uses Claude Code specific frontmatter (`allowed-tools`, `context`, `hooks`)
+
+Risk level is derived as `high` (destructive without confirmation), `medium` (destructive or network), or `low`.
+
+## sources.yaml
+
+`skai init` writes the following defaults; add, remove or disable entries freely:
+
+```yaml
+sources:
+  - name: composio-awesome-claude-skills
+    repo: https://github.com/ComposioHQ/awesome-claude-skills
+    enabled: true
+  - name: sickn33-antigravity-awesome-skills
+    repo: https://github.com/sickn33/antigravity-awesome-skills
+    enabled: true
+  - name: alirezarezvani-claude-skills
+    repo: https://github.com/alirezarezvani/claude-skills
+    enabled: true
+```
+
+## How indexing works
+
+For each enabled source `skai` clones (or pulls) the repository under `~/.skai/sources/<name>`, walks the tree, and indexes every directory containing a valid `SKILL.md` (frontmatter with at least `name` and `description`). Skills are stored in `~/.skai/index.json` together with their metadata, risk flags, last commit hash and date, and a content hash used for deduplication.
+
+## License
+
+Distributed under the MIT License. See [LICENSE](LICENSE).

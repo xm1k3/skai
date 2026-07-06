@@ -8,6 +8,10 @@
 *.so
 *.dylib
 
+# skai build output
+/skai
+/dist/
+
 # Test binary, built with `go test -c`
 *.test
 
