@@ -1,4 +1,6 @@
-<h1 align="center">skai</h1>
+<p align="center">
+  <img src="assets/skai-logo.svg" alt="skai" width="360">
+</p>
 
 <p align="center">
   Community-driven aggregator and installer for Agent Skills.
@@ -42,6 +44,121 @@ skai sync          # clone/pull every enabled source and build the index
 skai search pdf    # find a skill
 skai info pdf      # inspect its metadata and risk flags
 skai install pdf --target claude-code --project
+```
+
+## Examples
+
+### Sync the sources
+
+```console
+$ skai sync
+composio-awesome-claude-skills           cloned, 864 skills
+sickn33-antigravity-awesome-skills       cloned, 5996 skills
+alirezarezvani-claude-skills             cloned, 758 skills
+behisecc-awesome-claude-skills           cloned, 0 skills
+travisvn-awesome-claude-skills           cloned, 0 skills
+
+Indexed 7618 skills from 5 sources into /home/user/.skai/index.json
+```
+
+### Search the catalog
+
+```console
+$ skai search pdf
+NAME                 CATEGORY   RISK    SOURCE                          DESCRIPTION
+pdf                  documents  medium  composio-awesome-claude-skills  Comprehensive PDF manipulation toolkit for extra...
+api2pdf-automation   documents  medium  composio-awesome-claude-skills  Automate Api2pdf tasks via Rube MCP (Composio). ...
+craftmypdf-automation documents medium  composio-awesome-claude-skills  Automate Craftmypdf tasks via Rube MCP (Composio...
+pdf-co-automation    documents  medium  composio-awesome-claude-skills  Automate PDF co tasks via Rube MCP (Composio). A...
+
+4 skills
+```
+
+### Filter by category and risk
+
+```console
+$ skai list --category security --risk high
+NAME                    CATEGORY  RISK  SOURCE                              DESCRIPTION
+007                     security  high  sickn33-antigravity-awesome-skills  Security audit, hardening, threat modeling (STRI...
+api-fuzzing-bug-bounty  security  high  sickn33-antigravity-awesome-skills  Provide comprehensive techniques for testing RES...
+```
+
+### Inspect a skill
+
+```console
+$ skai info pdf
+Name:                        pdf
+Description:                 Comprehensive PDF manipulation toolkit for extracting text and tables, creating new PDFs, merging/splitting documents, and handling forms.
+Category:                    documents
+Source:                      composio-awesome-claude-skills
+Repository:                  https://github.com/ComposioHQ/awesome-claude-skills
+Path:                        document-skills/pdf
+Last commit:                 92568c1edaff (2026-05-22T08:47:49+05:30)
+Risk level:                  medium
+Network calls:               yes
+Destructive ops:             no
+Confirms before destructive: no
+Has scripts:                 yes
+Claude Code only:            no
+Extra frontmatter fields:    license
+Lines:                       295
+Token estimate:              1767
+Content hash:                38d8559d4899
+```
+
+### Install with a risk summary
+
+Every install prints the risk summary and asks for confirmation before copying
+(skip the prompt with `--yes`, the summary is still printed):
+
+```console
+$ skai install pdf --target claude-code --project
+Skill:                       pdf (composio-awesome-claude-skills)
+Destination:                 .claude/skills/pdf
+Risk level:                  medium
+Network calls:               yes
+Destructive ops:             no
+Confirms before destructive: no
+Has scripts:                 yes
+Proceed with install? [y/N]: y
+Installed pdf (copied) to .claude/skills/pdf
+```
+
+### Validate a skill
+
+```console
+$ skai validate pdf
+composio-awesome-claude-skills/pdf
+  WARN  description is 252 characters, agents work best under 200
+
+Validated 1 skills: 0 errors, 1 warnings
+```
+
+### Catalog statistics
+
+```console
+$ skai stats
+Total skills: 3161
+Last sync:    2026-07-06 21:40:26 UTC
+
+BY CATEGORY    COUNT
+productivity   895
+uncategorized  610
+web            384
+security       272
+devops         234
+...
+
+BY RISK  COUNT
+medium   1672
+low      1227
+high     262
+
+FLAGS             COUNT
+has scripts       1058
+network calls     1798
+destructive ops   427
+claude code only  84
 ```
 
 ## Commands
