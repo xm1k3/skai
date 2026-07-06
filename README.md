@@ -12,6 +12,10 @@
   <a href="https://github.com/xm1k3/skai/releases"><img src="https://img.shields.io/github/v/release/xm1k3/skai"></a>
 </p>
 
+<p align="center">
+  <img src="assets/demo.gif" alt="skai demo" width="760">
+</p>
+
 ---
 
 `skai` (SKill kit for AI) collects [Agent Skills](https://docs.claude.com/en/docs/agents-and-tools/agent-skills) scattered across dozens of community repositories into a single searchable catalog, runs static risk analysis on every skill, and installs them into Claude Code, Codex CLI or claude.ai with one command.
