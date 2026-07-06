@@ -1,0 +1,21 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="skai">
+  <defs>
+    <linearGradient id="skaiBg" x1="80" y1="48" x2="432" y2="464" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#6366F1"/>
+    </linearGradient>
+  </defs>
+  <rect x="16" y="16" width="480" height="480" rx="112" fill="url(#skaiBg)"/>
+  <g stroke="#FFFFFF" stroke-width="20" stroke-linecap="round" stroke-linejoin="round" fill="none">
+    <path d="M148 168 L256 300"/>
+    <path d="M256 148 L256 300"/>
+    <path d="M364 168 L256 300"/>
+  </g>
+  <g fill="#FFFFFF">
+    <circle cx="148" cy="168" r="30"/>
+    <circle cx="256" cy="148" r="30"/>
+    <circle cx="364" cy="168" r="30"/>
+    <circle cx="256" cy="300" r="40"/>
+  </g>
+  <rect x="150" y="372" width="212" height="34" rx="17" fill="#FFFFFF" fill-opacity="0.92"/>
+</svg>
